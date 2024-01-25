@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios');
+require('dotenv').config();
 
 const app = express();
 const port = 3020;
@@ -25,7 +26,7 @@ async function getData(URL) {
       method: "get",
       maxBodyLength: Infinity,
       url: URL,
-      headers: {"Authorization": "Bearer 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", "X-GitHub-Api-Version": "2022-11-28"},
+      headers: {"Authorization": process.env.GITHUB_TOKEN, "X-GitHub-Api-Version": "2022-11-28"},
     };
 
     const response = await axios.request(config);
