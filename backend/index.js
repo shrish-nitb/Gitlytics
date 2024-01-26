@@ -66,7 +66,7 @@ function make(profile) {
           let branches = await getData(repo.url + "/branches");
 
           for (const { name } of branches) {
-            let tree = (await getData(repo.url + "/git/trees/" + name)).tree;
+            let tree = (await getData(repo.url + "/git/trees/" + name +"?recursive=true")).tree;
 
             for (const { path, url } of tree) {
               if (path.includes("package.json")) {
