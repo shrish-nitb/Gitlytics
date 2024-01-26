@@ -24,24 +24,11 @@ app.get("/github-info", async (req, res) => {
 
     res.json(userData);
   } catch (error) {
-    try {
-      if(error.response && error.response.status == 403){
-        let msg = "5000 pings done please try after "+ (await getData("https://api.github.com/rate_limit")).rate.reset;
-        res
-        .status(error.response.status)
-        .json({ error: msg });
-      } else {
-      res
-        .status(error.response.status)
-        .json({ error: error.response.statusText });
-      }
-    } catch (error) {
-      
-    } finally {
+    
       res
       .status(500)
       .json({ error: "Internal Server error" });
-    }
+    
 
   }
 });
