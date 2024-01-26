@@ -58,7 +58,8 @@ return new Promise(async (resolve, reject)=>{
               for (const { path, url } of tree) {
                 if (path.includes("package.json")) {
                   let packageJson = await getData(url);
-                  repoData.dependencies = JSON.parse(atob(packageJson.content)).dependencies;
+                  let pobj = JSON.parse(atob(packageJson.content))
+                  repoData.dependencies = {...pobj.dependencies, ...pobj.devDependencies};
                 }
               }
             }
