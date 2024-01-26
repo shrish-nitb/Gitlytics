@@ -137,7 +137,7 @@ export function App() {
   const [UserName, setUserName] = useState("");
   const [info, setInfo] = useState({});
   const [showResults, setShowResults] = useState(
-    "Please write your Github profile URL and Hit Enter"
+    "Please write your Github profile URL(github.com/<username> or https://github.com/<username>) and Hit Enter"
   );
 
   const fetchData = async () => {
