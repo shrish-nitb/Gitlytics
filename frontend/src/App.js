@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+
 import { useState } from "react";
 import axios from "axios";
 
@@ -144,7 +144,7 @@ export function App() {
     try {
       setShowResults("Loading");
       const response = await axios.request({
-        url: `https://githubviewerngrg.onrender.com/github-info?username=${(UserName.toLowerCase().split("/"))[UserName.split("/").indexOf('github.com')+1].toLowerCase()}`,
+        url: `https://githubviewerngrg.onrender.com/github-info?username=${(UserName.toLowerCase().split("/"))[UserName.split("/").indexOf('github.com')+1]}`,
       });
       setInfo(response.data);
       setShowResults("Ready");
@@ -175,7 +175,7 @@ export function App() {
         onChange={(e) => setUserName(e.target.value)}
         onKeyPress={handleKeyPress}
       />
-      {<ResultCard userName={(UserName.split("/"))[UserName.toLowerCase().split("/").indexOf('github.com')+1].toLowerCase()} data={info} status={showResults} />}
+      {<ResultCard userName={(UserName.split("/"))[UserName.toLowerCase().split("/").indexOf('github.com')+1]} data={info} status={showResults} />}
     </>
   );
 }
