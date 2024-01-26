@@ -162,7 +162,7 @@ export function App() {
   return (
     <>
       <TextField
-        label="Search GitHub Repositories"
+        label="github.com/<username>"
         fullWidth
         style={{
           marginBottom: "20px",
