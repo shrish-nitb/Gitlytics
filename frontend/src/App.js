@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 
@@ -31,26 +31,56 @@ const countTagFrequency = (repos) => {
   return tagFrequency;
 };
 
-const ResultCard = ({ data, userName }) => {
+const ResultCard = ({ data, userName, status }) => {
+  if (status != "Ready") {
+    return (
+      <Container style={{ textAlign: "center" }}>
+        <Typography variant="subtitle" gutterBottom>
+          {status}
+        </Typography>
+      </Container>
+    );
+  }
   const tagFrequency = countTagFrequency(data.repos);
   return (
     <Container>
       <Typography variant="h2" align="center" gutterBottom>
         {userName}
-        <br />
-        <img src={`http://ghchart.rshah.org/${userName}`} alt="Github chart" />
       </Typography>
-
-      <Grid container spacing={2}>
-        {Object.entries(tagFrequency).map(([tag, count]) => (
-          <Grid item key={tag}>
-            <Badge badgeContent={count} color="error" invisible={count <= 1}>
-              <Chip label={tag} />
-            </Badge>
+      <br />
+      <div style={{
+    display: "flex",
+    flexDirection: "row",
+    alignContent: "center",
+    flexWrap: "nowrap",
+      }}>
+        <div style={{
+   flexGrow:1,
+      }}>
+          {" "}
+          <img
+            src={`http://ghchart.rshah.org/${userName}`}
+            alt="Github chart"
+          />
+          <Grid container spacing={2}>
+            {Object.entries(tagFrequency).map(([tag, count]) => (
+              <Grid item key={tag}>
+                <Badge
+                  badgeContent={count}
+                  color="error"
+                  invisible={count <= 1}
+                >
+                  <Chip label={tag} />
+                </Badge>
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
-
+        </div>
+        <img
+          src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${userName}`}
+          alt=""
+        />
+      </div>
       <Paper elevation={3} style={{ padding: "20px", margin: "20px 0" }}>
         <Typography variant="h4" gutterBottom>
           Contributions Over the Years
@@ -105,7 +135,29 @@ const ResultCard = ({ data, userName }) => {
 
 export function App() {
   const [UserName, setUserName] = useState("");
-  const [Data, setData] = useState([]);
+  const [info, setInfo] = useState({});
+  const [showResults, setShowResults] = useState(
+    "Please Enter one Github Username"
+  );
+
+  const fetchData = async () => {
+    try {
+      setShowResults("Loading");
+      const response = await axios.request({
+        url: `https://githubviewerngrg.onrender.com/github-info?username=${(UserName.toLowerCase().split("/"))[UserName.split("/").indexOf('github.com')+1].toLowerCase()}`,
+      });
+      setInfo(response.data);
+      setShowResults("Ready");
+    } catch (error) {
+      setShowResults(error.message);
+    }
+  };
+
+  const handleKeyPress = async (e) => {
+    if (e.key === "Enter") {
+      await fetchData();
+    }
+  };
 
   return (
     <>
@@ -120,23 +172,10 @@ export function App() {
           zIndex: 100001,
         }}
         value={UserName}
-        onChange={async (e) => {
-          setUserName(e.target.value);
-          let us = UserName.split(",");
-          for(e in us){
-            const u = e.trim();
-            const d = await axios.request({url: `https://githubviewerngrg.onrender.com/github-info?username=${UserName}`})
-            setData((Data)=>{return [...Data, d.data]});
-            console.log(Data);
-        }}}
+        onChange={(e) => setUserName(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
-      
-        {/* <ResultCard
-          key={index}
-          userName={u}
-          data={d.data}
-        />; */}
-      
+      {<ResultCard userName={(UserName.split("/"))[UserName.toLowerCase().split("/").indexOf('github.com')+1].toLowerCase()} data={info} status={showResults} />}
     </>
   );
 }
