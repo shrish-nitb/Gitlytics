@@ -1,4 +1,7 @@
 import React from "react";
+import { useState } from "react";
+import axios from "axios";
+
 import {
   Container,
   Typography,
@@ -17,9 +20,10 @@ const countTagFrequency = (repos) => {
 
   repos.forEach((repo) => {
     if (repo.tags) {
-     
       repo.tags.forEach((tag) => {
-        tagFrequency[tag] = (tagFrequency[tag] || 0) + 1;
+        if (typeof tag == "string")
+          tagFrequency[tag.toLowerCase()] =
+            (tagFrequency[tag.toLowerCase()] || 0) + 1;
       });
     }
   });
@@ -27,21 +31,10 @@ const countTagFrequency = (repos) => {
   return tagFrequency;
 };
 
-const App = ({ data, userName }) => {
+const ResultCard = ({ data, userName }) => {
   const tagFrequency = countTagFrequency(data.repos);
   return (
-    <Container style={{ padding: "1rem" }}>
-      <TextField
-        label="Search GitHub Repositories"
-        fullWidth
-        style={{
-          marginBottom: "20px",
-          position: "sticky",
-          top: "5px",
-          background: "white",
-        }}
-      />
-
+    <Container>
       <Typography variant="h2" align="center" gutterBottom>
         {userName}
         <br />
@@ -110,4 +103,40 @@ const App = ({ data, userName }) => {
   );
 };
 
-export default App;
+export function App() {
+  const [UserName, setUserName] = useState("");
+  const [Data, setData] = useState([]);
+
+  return (
+    <>
+      <TextField
+        label="Search GitHub Repositories"
+        fullWidth
+        style={{
+          marginBottom: "20px",
+          position: "sticky",
+          top: "10px",
+          background: "white",
+          zIndex: 100001,
+        }}
+        value={UserName}
+        onChange={async (e) => {
+          setUserName(e.target.value);
+          let us = UserName.split(",");
+          for(e in us){
+            const u = e.trim();
+            const d = await axios.request({url: `https://githubviewerngrg.onrender.com/github-info?username=${UserName}`})
+            setData((Data)=>{return [...Data, d.data]});
+            console.log(Data);
+        }}}
+      />
+      
+        {/* <ResultCard
+          key={index}
+          userName={u}
+          data={d.data}
+        />; */}
+      
+    </>
+  );
+}

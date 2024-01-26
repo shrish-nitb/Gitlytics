@@ -1,9 +1,12 @@
 const express = require('express');
 const axios = require('axios');
 require('dotenv').config();
+var cors = require('cors')
 
 const app = express();
 const port = 3020;
+
+app.use(cors())
 
 app.get('/github-info', async (req, res) => {
   try {
