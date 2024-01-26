@@ -24,7 +24,7 @@ app.get("/github-info", async (req, res) => {
 
     res.json(userData);
   } catch (error) {
-    if(error.response.status == 403){
+    if(error.response && error.response.status == 403){
       let msg = "5000 pings done please try after "+ (await getData("https://api.github.com/rate_limit")).rate.reset;
       res
       .status(error.response.status)
