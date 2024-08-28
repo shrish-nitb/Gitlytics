@@ -6,7 +6,10 @@ var cors = require("cors");
 const app = express();
 const port = 3020;
 
-app.use(cors())
+app.use(cors({
+  origin: 'https://githubviewer.vercel.app',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}))
 
 app.get("/github-info", async (req, res) => {
   try {
