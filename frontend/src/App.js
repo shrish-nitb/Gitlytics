@@ -144,7 +144,7 @@ export function App() {
     try {
       setShowResults("Loading");
       const response = await axios.request({
-        url: `https://githubviewerngrg.onrender.com/github-info?username=${(UserName.toLowerCase().split("/"))[UserName.split("/").indexOf('github.com')+1]}`,
+        url: `https://githubviewer-wb2q-29swxlxxm-shrishnitbs-projects.vercel.app/github-info?username=${(UserName.toLowerCase().split("/"))[UserName.split("/").indexOf('github.com')+1]}`,
       });
       setInfo(response.data);
       setShowResults("Ready");
